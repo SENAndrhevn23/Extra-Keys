@@ -9,18 +9,21 @@ import shaders.RGBPalette.RGBShaderReference;
 
 class StrumNote extends FlxSprite
 {
-	public var noteData:Int = 0;
-	public var player:Int = 0;
 	public var rgbShader:RGBShaderReference;
 	public var resetAnim:Float = 0;
+	public var noteData:Int = 0;
 	public var direction:Float = 90;
 	public var downScroll:Bool = false;
 	public var sustainReduce:Bool = true;
-	public var useRGBShader:Bool = true;
+	public var player:Int = 0;
 
 	private var _texture:String = null;
 	public var texture(get, set):String;
-	private function get_texture():String return _texture;
+	private function get_texture():String
+	{
+		return _texture;
+	}
+
 	private function set_texture(value:String):String
 	{
 		if (_texture != value)
@@ -31,14 +34,17 @@ class StrumNote extends FlxSprite
 		return _texture;
 	}
 
+	public var useRGBShader:Bool = true;
+
 	public function new(x:Float, y:Float, leData:Int, player:Int)
 	{
 		super(x, y);
+
 		animation = new PsychAnimationController(this);
 
 		noteData = leData;
 		this.player = player;
-		ID = noteData;
+		this.ID = noteData;
 
 		rgbShader = new RGBShaderReference(this, Note.initializeGlobalRGBShader(leData));
 		rgbShader.enabled = false;
@@ -67,66 +73,119 @@ class StrumNote extends FlxSprite
 			}
 		}
 
-		_texture = Note.defaultNoteSkin;
-		reloadNote();
+		var skin:String;
+		if (PlayState.SONG != null && PlayState.SONG.arrowSkin != null && PlayState.SONG.arrowSkin.length > 1)
+			skin = PlayState.SONG.arrowSkin;
+		else
+			skin = Note.defaultNoteSkin;
+
+		var customSkin:String = skin + Note.getNoteSkinPostfix();
+		if (Paths.fileExists('images/$customSkin.png', IMAGE))
+			skin = customSkin;
+
+		texture = skin;
 		scrollFactor.set();
 		playAnim('static');
 	}
 
-	public function reloadNote():Void
+	public function reloadNote()
 	{
 		var lastAnim:String = null;
 		if (animation.curAnim != null)
 			lastAnim = animation.curAnim.name;
 
-		var skin:String = _texture;
-		if (skin == null || skin == '')
-			skin = Note.defaultNoteSkin;
+		if (_texture == null || _texture == "")
+			_texture = Note.defaultNoteSkin;
 
 		if (PlayState.isPixelStage)
 		{
-			var pixelSkin:String = 'pixelUI/' + skin;
-			var graphic = Paths.image(pixelSkin);
-			if (graphic != null)
+			var pixelSkin:String = 'pixelUI/' + _texture;
+
+			loadGraphic(Paths.image(pixelSkin));
+			width = width / 4;
+			height = height / 5;
+			loadGraphic(Paths.image(pixelSkin), true, Math.floor(width), Math.floor(height));
+
+			antialiasing = false;
+			setGraphicSize(Std.int(width * PlayState.daPixelZoom));
+
+			animation.add('green', [6]);
+			animation.add('red', [7]);
+			animation.add('blue', [5]);
+			animation.add('purple', [4]);
+
+			switch (Math.abs(noteData) % 4)
 			{
-				loadGraphic(graphic, true, Std.int(graphic.width / 4), Std.int(graphic.height / 5));
-				antialiasing = false;
-				setGraphicSize(Std.int(width * PlayState.daPixelZoom));
+				case 0:
+					animation.add('static', [0]);
+					animation.add('pressed', [4, 8], 12, false);
+					animation.add('confirm', [12, 16], 24, false);
+				case 1:
+					animation.add('static', [1]);
+					animation.add('pressed', [5, 9], 12, false);
+					animation.add('confirm', [13, 17], 24, false);
+				case 2:
+					animation.add('static', [2]);
+					animation.add('pressed', [6, 10], 12, false);
+					animation.add('confirm', [14, 18], 12, false);
+				case 3:
+					animation.add('static', [3]);
+					animation.add('pressed', [7, 11], 12, false);
+					animation.add('confirm', [15, 19], 24, false);
 			}
 		}
 		else
 		{
-			var atlas = Paths.getSparrowAtlas(skin);
+			var atlas = Paths.getSparrowAtlas(_texture);
 			if (atlas == null)
 			{
-				trace('Missing strum atlas: ' + skin);
+				trace('Missing strum atlas: ' + _texture);
 				atlas = Paths.getSparrowAtlas(Note.defaultNoteSkin);
 			}
 			if (atlas != null)
 				frames = atlas;
 
+			animation.addByPrefix('green', 'arrowUP');
+			animation.addByPrefix('blue', 'arrowDOWN');
+			animation.addByPrefix('purple', 'arrowLEFT');
+			animation.addByPrefix('red', 'arrowRIGHT');
+
 			antialiasing = ClientPrefs.data.antialiasing;
 			setGraphicSize(Std.int(width * 0.7));
+
+			switch (Math.abs(noteData) % 4)
+			{
+				case 0:
+					animation.addByPrefix('static', 'arrowLEFT');
+					animation.addByPrefix('pressed', 'left press', 24, false);
+					animation.addByPrefix('confirm', 'left confirm', 24, false);
+				case 1:
+					animation.addByPrefix('static', 'arrowDOWN');
+					animation.addByPrefix('pressed', 'down press', 24, false);
+					animation.addByPrefix('confirm', 'down confirm', 24, false);
+				case 2:
+					animation.addByPrefix('static', 'arrowUP');
+					animation.addByPrefix('pressed', 'up press', 24, false);
+					animation.addByPrefix('confirm', 'up confirm', 24, false);
+				case 3:
+					animation.addByPrefix('static', 'arrowRIGHT');
+					animation.addByPrefix('pressed', 'right press', 24, false);
+					animation.addByPrefix('confirm', 'right confirm', 24, false);
+			}
 		}
 
 		updateHitbox();
+
 		if (lastAnim != null)
 			playAnim(lastAnim, true);
 	}
 
-	public function playAnim(anim:String, ?force:Bool = false):Void
+	public function playerPosition()
 	{
-		animation.play(anim, force);
-		if (animation.curAnim != null)
-		{
-			centerOffsets();
-			centerOrigin();
-		}
-		if (useRGBShader)
-			rgbShader.enabled = (animation.curAnim != null && animation.curAnim.name != 'static');
+		x = (Note.swagWidth * noteData) + 50 + ((FlxG.width / 2) * player);
 	}
 
-	override function update(elapsed:Float):Void
+	override function update(elapsed:Float)
 	{
 		if (resetAnim > 0)
 		{
@@ -138,5 +197,17 @@ class StrumNote extends FlxSprite
 			}
 		}
 		super.update(elapsed);
+	}
+
+	public function playAnim(anim:String, ?force:Bool = false)
+	{
+		animation.play(anim, force);
+		if (animation.curAnim != null)
+		{
+			centerOffsets();
+			centerOrigin();
+		}
+		if (useRGBShader)
+			rgbShader.enabled = (animation.curAnim != null && animation.curAnim.name != 'static');
 	}
 }
