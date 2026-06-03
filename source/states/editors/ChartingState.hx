@@ -87,7 +87,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		['Play Sound', "Value 1: Sound file name\nValue 2: Volume (Default: 1), ranges from 0 to 1"]
 	];
 	
-	public static var keysArray:Array<FlxKey> = [ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE]; //Used for Vortex Editor
+	public static var keysArray:Array<FlxKey> = [ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT]; //Used for Vortex Editor
 	public static var SHOW_EVENT_COLUMN = true;
 	public static var GRID_COLUMNS_PER_PLAYER = 4;
 	public static var GRID_PLAYERS = 2;
@@ -434,6 +434,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		addNoteTab();
 		addSectionTab();
 		addSongTab();
+		addExtraKeysTab();
 		
 		////// for upper box
 		addFileTab();
@@ -605,6 +606,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			stage: 'stage',
 			format: 'psych_v1'
 		};
+		Reflect.setField(song, 'mania', 4);
 		Song.chartPath = null;
 		loadChart(song);
 	}
@@ -643,6 +645,11 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		girlfriendDropDown.selectedLabel = PlayState.SONG.gfVersion;
 		stageDropDown.selectedLabel = PlayState.SONG.stage;
 		StageData.loadDirectory(PlayState.SONG);
+		if(chartManiaStepper != null)
+		{
+			var maniaValue:Dynamic = Reflect.field(PlayState.SONG, 'mania');
+			chartManiaStepper.value = maniaValue != null ? FlxMath.bound(Std.int(maniaValue), 1, 9) : 4;
+		}
 
 		// DATA TAB
 		gameOverCharDropDown.selectedLabel = PlayState.SONG.gameOverChar;
@@ -656,6 +663,25 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		noteSplashesInputText.text = PlayState.SONG.splashSkin;
 	}
 	
+
+function addExtraKeysTab()
+{
+	var tab_group = mainBox.getTab('Extra Keys').menu;
+	var objX = 10;
+	var objY = 25;
+	var txt = new FlxText(objX, objY, 280, 'Set how many keys this chart uses.'); 
+	tab_group.add(txt);
+
+	objY += 40;
+	chartManiaStepper = new PsychUINumericStepper(objX, objY, 1, 4, 1, 9, 0);
+	chartManiaStepper.onValueChange = function()
+	{
+		Reflect.setField(PlayState.SONG, 'mania', Std.int(chartManiaStepper.value));
+	};
+	tab_group.add(new FlxText(objX, objY - 15, 120, 'Mania (1-9):'));
+	tab_group.add(chartManiaStepper);
+}
+
 	var noteSelectionSine:Float = 0;
 	var selectedNotes:Array<MetaNote> = [];
 	var ignoreClickForThisFrame:Bool = false;
@@ -1785,6 +1811,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	function loadChart(song:SwagSong)
 	{
 		PlayState.SONG = song;
+		if(!Reflect.hasField(PlayState.SONG, 'mania')) Reflect.setField(PlayState.SONG, 'mania', 4);
 		StageData.loadDirectory(PlayState.SONG);
 		Conductor.bpm = PlayState.SONG.bpm;
 	}
@@ -2338,6 +2365,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	}
 
 	var playbackSlider:PsychUISlider;
+	var chartManiaStepper:PsychUINumericStepper;
 
 	var mouseSnapCheckBox:PsychUICheckBox;
 	var ignoreProgressCheckBox:PsychUICheckBox;
