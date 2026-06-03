@@ -2700,11 +2700,11 @@ private function refreshSongKeyCount():Int
 	{
 		mania = Std.int(rawMania);
 	}
-	songKeyCount = FlxMath.bound(mania, 1, 9);
+	songKeyCount = Std.int(FlxMath.bound(mania, 1, 9));
 	return songKeyCount;
 }
 
-private inline function getKeyIndexFromCode(keyCode:FlxKey):Int
+private function getKeyIndexFromCode(keyCode:FlxKey):Int
 {
 	for (i in 0...songKeyCount)
 	{
@@ -2825,6 +2825,24 @@ private function onKeyRelease(event:KeyboardEvent):Void
 			}
 		}
 		return -1;
+	}
+
+	private function keyReleased(key:Int):Void
+	{
+		if(cpuControlled || paused || inCutscene || key < 0 || key >= playerStrums.length || !generatedMusic || endingSong || boyfriend.stunned) return;
+
+		var ret:Dynamic = callOnScripts('onKeyReleasePre', [key]);
+		if(ret == LuaUtils.Function_Stop) return;
+
+		if(keysPressed.contains(key)) keysPressed.remove(key);
+
+		var spr:StrumNote = playerStrums.members[key];
+		if(strumsBlocked[key] != true && spr != null && spr.animation.curAnim.name != 'confirm')
+		{
+			spr.playAnim('static');
+			spr.resetAnim = 0;
+		}
+		callOnScripts('onKeyRelease', [key]);
 	}
 
 	
