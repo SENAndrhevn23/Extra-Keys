@@ -140,6 +140,113 @@ class PlayState extends MusicBeatState
 		return stageUI == "pixel" || stageUI.endsWith("-pixel");
 
 	public static var SONG:SwagSong = null;
+
+public static var maniaNoteColors:Array<Array<Array<Int>>> = [
+	[
+		[0xFFCCCCCC, 0xFFFFFFFF, 0xFF3E3E3E],
+		[0xFFCCCCCC, 0xFFFFFFFF, 0xFF3E3E3E],
+		[0xFFCCCCCC, 0xFFFFFFFF, 0xFF3E3E3E],
+		[0xFFCCCCCC, 0xFFFFFFFF, 0xFF3E3E3E]
+	],
+	[
+		[0xFFFFFF00, 0xFFFFFFFF, 0xFF993300],
+		[0xFF0033FF, 0xFFFFFFFF, 0xFF000066]
+	],
+	[
+		[0xFFFFFF00, 0xFFFFFFFF, 0xFF993300],
+		[0xFFCCCCCC, 0xFFFFFFFF, 0xFF3E3E3E],
+		[0xFF0033FF, 0xFFFFFFFF, 0xFF000066]
+	],
+	[
+		[0xFF5AC8FA, 0xFFFFFFFF, 0xFF2B587A],
+		[0xFFFFB84D, 0xFFFFFFFF, 0xFF8C4C00],
+		[0xFFFF5A5A, 0xFFFFFFFF, 0xFF7A2222],
+		[0xFF7CFF6B, 0xFFFFFFFF, 0xFF2E6B2E]
+	],
+	[
+		[0xFF5AC8FA, 0xFFFFFFFF, 0xFF2B587A],
+		[0xFFFFB84D, 0xFFFFFFFF, 0xFF8C4C00],
+		[0xFFCCCCCC, 0xFFFFFFFF, 0xFF3E3E3E],
+		[0xFFFF5A5A, 0xFFFFFFFF, 0xFF7A2222],
+		[0xFF7CFF6B, 0xFFFFFFFF, 0xFF2E6B2E]
+	],
+	[
+		[0xFFFFF000, 0xFFFFFFFF, 0xFF7A6A00],
+		[0xFF5AC8FA, 0xFFFFFFFF, 0xFF2B587A],
+		[0xFFFFB84D, 0xFFFFFFFF, 0xFF8C4C00],
+		[0xFF7CFF6B, 0xFFFFFFFF, 0xFF2E6B2E],
+		[0xFFB85CFF, 0xFFFFFFFF, 0xFF53247A],
+		[0xFFFF5A5A, 0xFFFFFFFF, 0xFF7A2222]
+	],
+	[
+		[0xFFFFF000, 0xFFFFFFFF, 0xFF7A6A00],
+		[0xFF5AC8FA, 0xFFFFFFFF, 0xFF2B587A],
+		[0xFFFFB84D, 0xFFFFFFFF, 0xFF8C4C00],
+		[0xFFCCCCCC, 0xFFFFFFFF, 0xFF3E3E3E],
+		[0xFFB85CFF, 0xFFFFFFFF, 0xFF53247A],
+		[0xFFFF5A5A, 0xFFFFFFFF, 0xFF7A2222],
+		[0xFF7CFF6B, 0xFFFFFFFF, 0xFF2E6B2E]
+	],
+	[
+		[0xFFFFF000, 0xFFFFFFFF, 0xFF7A6A00],
+		[0xFF5AC8FA, 0xFFFFFFFF, 0xFF2B587A],
+		[0xFFFFB84D, 0xFFFFFFFF, 0xFF8C4C00],
+		[0xFF7CFF6B, 0xFFFFFFFF, 0xFF2E6B2E],
+		[0xFFB85CFF, 0xFFFFFFFF, 0xFF53247A],
+		[0xFFFF8A00, 0xFFFFFFFF, 0xFF7A3D00],
+		[0xFF4A66FF, 0xFFFFFFFF, 0xFF1B2B7A],
+		[0xFFFF5A5A, 0xFFFFFFFF, 0xFF7A2222]
+	],
+	[
+		[0xFF6EEB83, 0xFFFFFFFF, 0xFF1F5D2C],
+		[0xFFFFF000, 0xFFFFFFFF, 0xFF7A6A00],
+		[0xFF5AC8FA, 0xFFFFFFFF, 0xFF2B587A],
+		[0xFFFFB84D, 0xFFFFFFFF, 0xFF8C4C00],
+		[0xFF1B2B7A, 0xFFFFFFFF, 0xFF0A133A],
+		[0xFFB85CFF, 0xFFFFFFFF, 0xFF53247A],
+		[0xFFFF8A00, 0xFFFFFFFF, 0xFF7A3D00],
+		[0xFFFF5A5A, 0xFFFFFFFF, 0xFF7A2222],
+		[0xFF7CFF6B, 0xFFFFFFFF, 0xFF2E6B2E]
+	]
+];
+
+public static var maniaNoteSizes:Array<Float> = [0.9, 0.85, 0.8, 0.7, 0.66, 0.6, 0.55, 0.5, 0.46];
+public static var maniaNoteOffsetsX:Array<Float> = [-100, -75, -50, 0, 35, 45, 52, 57, 65];
+public static var maniaNoteOffsetsY:Array<Float> = [0, 0, 0, 0, 10, 25, 25, 40, 40];
+public static var maniaStrumOffsets:Array<Float> = [0, -30, -10, 0, 10, 20, 32, 40, 45];
+public static var maniaSingAnimations:Array<Array<String>> = [
+	["singUP"],
+	["singLEFT", "singRIGHT"],
+	["singLEFT", "singUP", "singRIGHT"],
+	["singLEFT", "singDOWN", "singUP", "singRIGHT"],
+	["singLEFT", "singDOWN", "singUP", "singUP", "singRIGHT"],
+	["singLEFT", "singUP", "singRIGHT", "singLEFT", "singDOWN", "singRIGHT"],
+	["singLEFT", "singUP", "singRIGHT", "singUP", "singLEFT", "singDOWN", "singRIGHT"],
+	["singLEFT", "singDOWN", "singUP", "singRIGHT", "singLEFT", "singDOWN", "singUP", "singRIGHT"],
+	["singLEFT", "singDOWN", "singUP", "singRIGHT", "singUP", "singLEFT", "singDOWN", "singUP", "singRIGHT"]
+];
+public static var maniaNoteAnimations:Array<Array<String>> = [
+	["square"],
+	["left", "right"],
+	["left", "square", "right"],
+	["left", "down", "up", "right"],
+	["left", "down", "square", "up", "right"],
+	["left", "up", "right", "left", "down", "right"],
+	["left", "up", "right", "square", "left", "down", "right"],
+	["left", "down", "up", "right", "left", "down", "up", "right"],
+	["left", "down", "up", "right", "square", "left", "down", "up", "right"]
+];
+public static var maniaColArray:Array<Array<String>> = [
+	["square"],
+	["purple", "red"],
+	["purple", "square", "red"],
+	["purple", "blue", "green", "red"],
+	["purple", "blue", "square", "green", "red"],
+	["purple", "green", "red", "purple", "blue", "red"],
+	["purple", "green", "red", "square", "purple", "blue", "red"],
+	["purple", "blue", "green", "red", "purple", "blue", "green", "red"],
+	["purple", "blue", "green", "red", "square", "purple", "blue", "green", "red"]
+];
 	public static var isStoryMode:Bool = false;
 	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
@@ -259,6 +366,7 @@ class PlayState extends MusicBeatState
 	// Less laggy controls
 	private var keysArray:Array<String>;
 	public var songName:String;
+	public var currentMania:Int = 4;
 
 	// Callbacks for stages
 	public var startCallback:Void->Void = null;
@@ -287,12 +395,7 @@ class PlayState extends MusicBeatState
 		PauseSubState.songName = null; //Reset to default
 		playbackRate = ClientPrefs.getGameplaySetting('songspeed');
 
-		keysArray = [
-			'note_left',
-			'note_down',
-			'note_up',
-			'note_right'
-		];
+		applyManiaSettings(getSongMania());
 
 		if(FlxG.sound.music != null)
 			FlxG.sound.music.stop();
@@ -1494,7 +1597,57 @@ class PlayState extends MusicBeatState
 		stagesFunc(function(stage:BaseStage) stage.eventPushedUnique(event));
 	}
 
-	function eventEarlyTrigger(event:EventNote):Float {
+	
+private function getSongMania():Int
+{
+	var raw:Dynamic = null;
+	if(SONG != null) raw = Reflect.field(SONG, 'mania');
+	if(raw == null) raw = FlxG.save.data.lastKeyCount;
+	var mania:Int = raw != null ? Std.int(raw) : 4;
+	return Std.int(FlxMath.bound(mania, 1, maniaNoteColors.length));
+}
+
+private function getManiaKeyBinds(mania:Int):Array<Array<FlxKey>>
+{
+	return switch(mania)
+	{
+		case 1: [[SPACE]];
+		case 2: [[F], [J]];
+		case 3: [[F], [SPACE], [J]];
+		case 4: [[D], [F], [J], [K]];
+		case 5: [[D], [F], [SPACE], [J], [K]];
+		case 6: [[S], [D], [F], [J], [K], [L]];
+		case 7: [[S], [D], [F], [SPACE], [J], [K], [L]];
+		case 8: [[A], [S], [D], [F], [H], [J], [K], [L]];
+		case 9: [[A], [S], [D], [F], [SPACE], [H], [J], [K], [L]];
+		default: [[D], [F], [J], [K]];
+	}
+}
+
+private function applyManiaSettings(mania:Int):Void
+{
+	currentMania = Std.int(FlxMath.bound(mania, 1, maniaNoteColors.length));
+	if(SONG != null) Reflect.setField(SONG, 'mania', currentMania);
+	FlxG.save.data.lastKeyCount = currentMania;
+	Note.swagWidth = 160 * maniaNoteSizes[currentMania - 1];
+	Note.colArray = maniaColArray[currentMania - 1];
+	if(currentMania != 4)
+		ClientPrefs.data.arrowRGB = maniaNoteColors[currentMania - 1];
+	singAnimations = maniaSingAnimations[currentMania - 1];
+	keysArray = [];
+	var keyBinds = getManiaKeyBinds(currentMania);
+	for (i in 0...currentMania)
+	{
+		var bindName:String = 'mania_' + currentMania + '_' + i;
+		keysArray.push(bindName);
+		if (Controls.instance != null)
+			Controls.instance.keyboardBinds.set(bindName, keyBinds[i]);
+		if (ClientPrefs.keyBinds != null)
+			ClientPrefs.keyBinds.set(bindName, keyBinds[i]);
+	}
+}
+
+function eventEarlyTrigger(event:EventNote):Float {
 		var returnedValue:Null<Float> = callOnScripts('eventEarlyTrigger', [event.event, event.value1, event.value2, event.strumTime], true);
 		if(returnedValue != null && returnedValue != 0) {
 			return returnedValue;
@@ -1524,48 +1677,66 @@ class PlayState extends MusicBeatState
 	}
 
 	public var skipArrowStartTween:Bool = false; //for lua
-	private function generateStaticArrows(player:Int):Void
+	
+private function generateStaticArrows(player:Int):Void
+{
+	var keyCount:Int = currentMania;
+	var strumLineX:Float = ClientPrefs.data.middleScroll ? STRUM_X_MIDDLESCROLL : STRUM_X;
+	var strumLineY:Float = ClientPrefs.data.downScroll ? (FlxG.height - 150) : 50;
+	for (i in 0...keyCount)
 	{
-		var strumLineX:Float = ClientPrefs.data.middleScroll ? STRUM_X_MIDDLESCROLL : STRUM_X;
-		var strumLineY:Float = ClientPrefs.data.downScroll ? (FlxG.height - 150) : 50;
-		for (i in 0...4)
+		var targetAlpha:Float = 1;
+		if (player < 1)
 		{
-			// FlxG.log.add(i);
-			var targetAlpha:Float = 1;
-			if (player < 1)
-			{
-				if(!ClientPrefs.data.opponentStrums) targetAlpha = 0;
-				else if(ClientPrefs.data.middleScroll) targetAlpha = 0.35;
-			}
-
-			var babyArrow:StrumNote = new StrumNote(strumLineX, strumLineY, i, player);
-			babyArrow.downScroll = ClientPrefs.data.downScroll;
-			if (!isStoryMode && !skipArrowStartTween)
-			{
-				//babyArrow.y -= 10;
-				babyArrow.alpha = 0;
-				FlxTween.tween(babyArrow, {/*y: babyArrow.y + 10,*/ alpha: targetAlpha}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
-			}
-			else babyArrow.alpha = targetAlpha;
-
-			if (player == 1)
-				playerStrums.add(babyArrow);
-			else
-			{
-				if(ClientPrefs.data.middleScroll)
-				{
-					babyArrow.x += 310;
-					if(i > 1) { //Up and Right
-						babyArrow.x += FlxG.width / 2 + 25;
-					}
-				}
-				opponentStrums.add(babyArrow);
-			}
-
-			strumLineNotes.add(babyArrow);
-			babyArrow.playerPosition();
+			if(!ClientPrefs.data.opponentStrums) targetAlpha = 0;
+			else if(ClientPrefs.data.middleScroll) targetAlpha = 0.35;
 		}
+
+		var babyArrow:StrumNote = new StrumNote(strumLineX, strumLineY, i, player);
+		babyArrow.animation.destroyAnimations();
+		babyArrow.frames.addAtlas(Paths.getSparrowAtlas("noteSkins/square"));
+
+		var noteAnim:String = maniaNoteAnimations[keyCount - 1][i];
+		if(noteAnim == null) noteAnim = 'square';
+
+		babyArrow.animation.addByPrefix('static', 'arrow' + noteAnim.toUpperCase(), 24, false);
+		babyArrow.animation.addByPrefix('pressed', noteAnim + ' press', 24, false);
+		babyArrow.animation.addByPrefix('confirm', noteAnim + ' confirm', 24, false);
+
+		var noteColor:Array<Int> = (keyCount == 4 && ClientPrefs.data.arrowRGB != null) ? ClientPrefs.data.arrowRGB[i] : maniaNoteColors[keyCount - 1][i];
+		babyArrow.rgbShader.r = noteColor[0];
+		babyArrow.rgbShader.g = noteColor[1];
+		babyArrow.rgbShader.b = noteColor[2];
+
+		babyArrow.downScroll = ClientPrefs.data.downScroll;
+		if (!isStoryMode && !skipArrowStartTween)
+		{
+			babyArrow.alpha = 0;
+			FlxTween.tween(babyArrow, {alpha: targetAlpha}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
+		}
+		else babyArrow.alpha = targetAlpha;
+
+		if (player == 1)
+			playerStrums.add(babyArrow);
+		else
+		{
+			if(ClientPrefs.data.middleScroll)
+			{
+				babyArrow.x += 310;
+				if(i > 1)
+					babyArrow.x += FlxG.width / 2 + 25;
+			}
+			opponentStrums.add(babyArrow);
+		}
+
+		strumLineNotes.add(babyArrow);
+		babyArrow.setGraphicSize(GRID_SIZE);
+		babyArrow.updateHitbox();
+		babyArrow.x += GRID_SIZE/2 - babyArrow.width/2;
+		babyArrow.y += GRID_SIZE/2 - babyArrow.height/2;
+		babyArrow.playerPosition();
 	}
+}
 
 	override function openSubState(SubState:FlxSubState)
 	{
